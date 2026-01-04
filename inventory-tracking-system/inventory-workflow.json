@@ -1,0 +1,521 @@
+{
+  "name": "ASSIGNING",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "LEADS FORM",
+        "formDescription": "TO TRACK THE LEADS OF POTENTIAL CUSTOMERS",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "NAME",
+              "placeholder": "surname firstname"
+            },
+            {
+              "fieldLabel": "EMAIL"
+            },
+            {
+              "fieldLabel": "PHONE",
+              "fieldType": "number"
+            },
+            {
+              "fieldLabel": "COMPANY"
+            },
+            {
+              "fieldLabel": "ANNUAL INCOME",
+              "fieldType": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        0,
+        496
+      ],
+      "id": "854e48fa-dd2d-429a-acb9-9e2fde7f81ec",
+      "name": "On form submission",
+      "webhookId": "c49afe5b-6a1d-45e0-aeb8-6fdcbcc6e814"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "app1gMyurOzPca7cO",
+          "mode": "list",
+          "cachedResultName": "LEADS",
+          "cachedResultUrl": "https://airtable.com/app1gMyurOzPca7cO"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblSdu69Xcvrc8Ip9",
+          "mode": "list",
+          "cachedResultName": "COMPANIES",
+          "cachedResultUrl": "https://airtable.com/app1gMyurOzPca7cO/tblSdu69Xcvrc8Ip9"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "NAME": "={{ $json.NAME }}",
+            "EMAIL": "={{ $json.EMAIL }}",
+            "PHONE": "={{ $json.PHONE.toString() }}",
+            "COMPANY": "={{ $json.COMPANY }}",
+            "ANNUAL INCOME": "={{ $json[\"ANNUAL INCOME\"] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "NAME",
+              "displayName": "NAME",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "EMAIL",
+              "displayName": "EMAIL",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "PHONE",
+              "displayName": "PHONE",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "COMPANY",
+              "displayName": "COMPANY",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "ANNUAL INCOME",
+              "displayName": "ANNUAL INCOME",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "STAFF",
+              "displayName": "STAFF",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        208,
+        496
+      ],
+      "id": "166d19a5-54ee-4cfa-aa9b-a5d04c097c35",
+      "name": "Create Lead in Airtable",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "b4lvLF0M0W3lKCWz",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "053e4270-9cd6-490c-a65e-735cc5f06118",
+                    "leftValue": "={{ $json.fields['ANNUAL INCOME']< 100000 }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "LOW LEADS"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "326b3af9-a727-4ec1-b180-28b18be03cec",
+                    "leftValue": "={{ $json.fields['ANNUAL INCOME'] >= 100000 && $json.fields['ANNUAL INCOME'] < 500000 }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "MEDIUM LEADS"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "4822958f-444f-4e3e-af47-ac1d3f187372",
+                    "leftValue": "={{ $json.fields['ANNUAL INCOME'] >= 500000 }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "HOT LEADS"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        400,
+        480
+      ],
+      "id": "afd5e0fc-5b8c-4692-a917-cf150daf7f2e",
+      "name": "Route by Income Level"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "13e80370-e265-4c6a-acad-bad9dcd811d3",
+              "name": "Salesperson",
+              "value": "Doings",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        640,
+        304
+      ],
+      "id": "ddff7f7b-3750-4962-9eea-140255e7da1e",
+      "name": "Set Salesperson - Low Income"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "de07c619-cfc1-41f2-98c1-6e9027e4c36c",
+              "name": "Salesperson",
+              "value": "Adama",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        640,
+        496
+      ],
+      "id": "67ffecb0-ebe6-4cde-83f3-6e06be361966",
+      "name": "Set Salesperson - Medium Income"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8923fa60-88a6-4234-af62-a940c97d7b02",
+              "name": "SalesPerson",
+              "value": "Adiba",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        656,
+        752
+      ],
+      "id": "124b8955-5f5e-4c8e-aba6-09d59693a39c",
+      "name": "Set Salesperson -High Income"
+    },
+    {
+      "parameters": {
+        "numberInputs": 3
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        928,
+        464
+      ],
+      "id": "2d6c0479-0a11-4ea9-aa43-0a5215c250c0",
+      "name": "Combine All Routes"
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C09PXDV2RTK",
+          "mode": "list",
+          "cachedResultName": "branding"
+        },
+        "text": "=:dart: *NEW LEAD ALERT!*  {{ $json.fields['ANNUAL INCOME'] >= 500000 ? ':fire: *HOT LEAD - HIGH VALUE* :fire:' : $json.fields['ANNUAL INCOME'] >= 100000 ? ':large_blue_circle: *MEDIUM PRIORITY LEAD*' : ':large_orange_circle: *LOW PRIORITY LEAD*' }}  *Lead Details:* - *Name:* {{ $json.fields.NAME }} - *Email:* {{ $json.fields.EMAIL }} - *Phone:* {{ $json.fields.PHONE }} - *Company:* {{ $json.fields.COMPANY }} - *Annual Income:* ${{ $json.fields['ANNUAL INCOME'].toLocaleString() }}  :bust_in_silhouette: *Assigned to:* {{ $json.SalesPerson }}  :calendar: *Received:* {{ $json.createdTime }}  :point_right: <https://airtable.com/your-base-url|View in Airtable>  {{ $json.fields['ANNUAL INCOME'] >= 500000 ? '---\\n_Time to close this deal!_ :muscle:' : '' }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.4,
+      "position": [
+        1168,
+        576
+      ],
+      "id": "5161c341-dd0d-4716-8edf-8d0e3ccaab0e",
+      "name": "Notify Sales Team on Slack",
+      "webhookId": "de7199eb-0f09-4853-9439-8a3d31b520be",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "ZgvFCya6XQhbC5cD",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.fields.EMAIL }}",
+        "subject": "You are Welcome",
+        "message": "=<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Welcome to Our Team</title>\n</head>\n<body style=\"margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f4;\">\n    <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"background-color: #f4f4f4; padding: 20px;\">\n        <tr>\n            <td align=\"center\">\n                <table width=\"600\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"background-color: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);\">\n                    \n                    <!-- Header with gradient -->\n                    <tr>\n                        <td style=\"background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 30px; text-align: center;\">\n                            <h1 style=\"margin: 0 0 10px 0; color: #ffffff; font-size: 32px; font-weight: bold;\">Welcome, {{ $json.fields.NAME }}! 👋</h1>\n                            <p style=\"margin: 0; color: #f3f4f6; font-size: 16px;\">We're excited to have you with us</p>\n                        </td>\n                    </tr>\n                    \n                    <!-- Main content -->\n                    <tr>\n                        <td style=\"padding: 40px 40px 30px 40px;\">\n                            <p style=\"margin: 0 0 20px 0; color: #374151; font-size: 16px; line-height: 1.6;\">\n                                Thank you for your interest in our services! We've received your information and our team is already reviewing your requirements.\n                            </p>\n                            \n                            <p style=\"margin: 0 0 25px 0; color: #374151; font-size: 16px; line-height: 1.6;\">\n                                We understand that <strong>{{ $json.fields.COMPANY }}</strong> has unique needs, and we're committed to providing you with tailored solutions that drive real results.\n                            </p>\n                            \n                            <!-- What's Next Section -->\n                            <div style=\"background: linear-gradient(to right, #f0f9ff, #e0f2fe); border-left: 4px solid #0ea5e9; padding: 20px; border-radius: 6px; margin-bottom: 25px;\">\n                                <h2 style=\"margin: 0 0 15px 0; color: #0c4a6e; font-size: 20px; font-weight: bold;\">What Happens Next? 🚀</h2>\n                                <ul style=\"margin: 0; padding-left: 20px; color: #374151; font-size: 15px; line-height: 1.8;\">\n                                    <li style=\"margin-bottom: 10px;\"><strong>Within 24 hours:</strong> Your dedicated account manager will reach out to you</li>\n                                    <li style=\"margin-bottom: 10px;\"><strong>Initial consultation:</strong> We'll discuss your goals and requirements in detail</li>\n                                    <li style=\"margin-bottom: 10px;\"><strong>Custom proposal:</strong> Receive a tailored solution designed specifically for your needs</li>\n                                </ul>\n                            </div>\n                            \n                            <!-- Account Manager Info -->\n                            <div style=\"background-color: #f9fafb; border-radius: 8px; padding: 25px; margin-bottom: 25px; border: 1px solid #e5e7eb;\">\n                                <h3 style=\"margin: 0 0 15px 0; color: #1f2937; font-size: 18px; font-weight: bold;\">👨‍💼 Your Account Manager</h3>\n                                <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n                                    <tr>\n                                        <td style=\"padding: 10px 0;\">\n                                            <div style=\"display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; padding: 12px 24px; border-radius: 25px; font-size: 18px; font-weight: bold;\">\n                                                {{ $json.SalesPerson }}\n                                            </div>\n                                        </td>\n                                    </tr>\n                                    <tr>\n                                        <td style=\"padding-top: 10px;\">\n                                            <p style=\"margin: 0; color: #6b7280; font-size: 14px; line-height: 1.6;\">\n                                                {{ $json.SalesPerson }} has extensive experience helping businesses like yours achieve their goals. You're in great hands!\n                                            </p>\n                                        </td>\n                                    </tr>\n                                </table>\n                            </div>\n                            \n                            <!-- Quick Contact Info -->\n                            <div style=\"background-color: #fef3c7; border-radius: 8px; padding: 20px; margin-bottom: 25px; border-left: 4px solid #f59e0b;\">\n                                <p style=\"margin: 0; color: #92400e; font-size: 14px; line-height: 1.6;\">\n                                    <strong>💡 Pro Tip:</strong> Have questions in the meantime? Feel free to reply to this email or give us a call. We're here to help!\n                                </p>\n                            </div>\n                            \n                            <!-- CTA Button -->\n                            <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin: 30px 0;\">\n                                <tr>\n                                    <td align=\"center\">\n                                        <a href=\"https://your-website.com/schedule\" style=\"display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: bold; box-shadow: 0 4px 6px rgba(102, 126, 234, 0.4);\">Schedule a Call</a>\n                                    </td>\n                                </tr>\n                            </table>\n                            \n                            <p style=\"margin: 25px 0 0 0; color: #6b7280; font-size: 15px; line-height: 1.6;\">\n                                We're looking forward to partnering with you!\n                            </p>\n                            \n                            <p style=\"margin: 15px 0 0 0; color: #374151; font-size: 16px; font-weight: 600;\">\n                                Best regards,<br>\n                                <span style=\"color: #667eea;\">The Team</span>\n                            </p>\n                            \n                        </td>\n                    </tr>\n                    \n                    <!-- Footer -->\n                    <tr>\n                        <td style=\"background-color: #f9fafb; padding: 30px 40px; border-top: 1px solid #e5e7eb;\">\n                            <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n                                <tr>\n                                    <td align=\"center\">\n                                        <p style=\"margin: 0 0 15px 0; color: #374151; font-size: 15px; font-weight: 600;\">\n                                            Connect with us\n                                        </p>\n                                        <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" align=\"center\">\n                                            <tr>\n                                                <td style=\"padding: 0 10px;\">\n                                                    <a href=\"#\" style=\"color: #667eea; text-decoration: none; font-size: 24px;\">🌐</a>\n                                                </td>\n                                                <td style=\"padding: 0 10px;\">\n                                                    <a href=\"#\" style=\"color: #667eea; text-decoration: none; font-size: 24px;\">💼</a>\n                                                </td>\n                                                <td style=\"padding: 0 10px;\">\n                                                    <a href=\"#\" style=\"color: #667eea; text-decoration: none; font-size: 24px;\">📧</a>\n                                                </td>\n                                            </tr>\n                                        </table>\n                                    </td>\n                                </tr>\n                                <tr>\n                                    <td align=\"center\" style=\"padding-top: 20px;\">\n                                        <p style=\"margin: 0; color: #9ca3af; font-size: 13px; line-height: 1.5;\">\n                                            This email was sent to {{ $json.fields.EMAIL }}<br>\n                                            © 2025 Your Company. All rights reserved.\n                                        </p>\n                                    </td>\n                                </tr>\n                            </table>\n                        </td>\n                    </tr>\n                    \n                </table>\n            </td>\n        </tr>\n    </table>\n</body>\n</html>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1168,
+        400
+      ],
+      "id": "c7423def-3bfe-4a81-acfd-d5b6e56715d2",
+      "name": "Send Welcome Email to Lead",
+      "webhookId": "d343174b-8ae3-4ade-a28f-ed90e76fc960",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "1sRDosAMompwBxiF",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "On form submission": [
+      {
+        "json": {
+          "NAME": "KAYCEE ARTETA",
+          "EMAIL": "odiivictory@gmail.com",
+          "PHONE": 8163122942,
+          "COMPANY": "ARSENAL JOKEMEN",
+          "ANNUAL INCOME": 1000,
+          "submittedAt": "2025-12-27T10:33:53.668+01:00",
+          "formMode": "test"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Create Lead in Airtable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Lead in Airtable": {
+      "main": [
+        [
+          {
+            "node": "Route by Income Level",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route by Income Level": {
+      "main": [
+        [
+          {
+            "node": "Set Salesperson - Low Income",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Salesperson - Medium Income",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Salesperson -High Income",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Salesperson - Low Income": {
+      "main": [
+        [
+          {
+            "node": "Combine All Routes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Salesperson - Medium Income": {
+      "main": [
+        [
+          {
+            "node": "Combine All Routes",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Set Salesperson -High Income": {
+      "main": [
+        [
+          {
+            "node": "Combine All Routes",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Combine All Routes": {
+      "main": [
+        [
+          {
+            "node": "Send Welcome Email to Lead",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Notify Sales Team on Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Welcome Email to Lead": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "e70b1b25-4b50-4690-a267-416c2702ed65",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "22b82d6c5f13fa02ebafb0c13c85010ab3729eacc886c03a460fa6b829d101a5"
+  },
+  "id": "sPMc3pSltfhT4di9",
+  "tags": []
+}
